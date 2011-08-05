@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+/*****************************************************
+*  
+*  Copyright 2009 Akamai Technologies, Inc.  All Rights Reserved.
+*  
+*****************************************************
+*  The contents of this file are subject to the Mozilla Public License
+*  Version 1.1 (the "License"); you may not use this file except in
+*  compliance with the License. You may obtain a copy of the License at
+*  http://www.mozilla.org/MPL/
+*   
+*  Software distributed under the License is distributed on an "AS IS"
+*  basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
+*  License for the specific language governing rights and limitations
+*  under the License.
+*   
+*  
+*  The Initial Developer of the Original Code is Akamai Technologies, Inc.
+*  Portions created by Akamai Technologies, Inc. are Copyright (C) 2009 Akamai 
+*  Technologies, Inc. All Rights Reserved. 
+*  
+*****************************************************/
+-->
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml"
+				xmlns:samples="org.osmf.samples.*"
+				width="640" height="360" applicationComplete="init()" backgroundColor="#ffffff"
+				horizontalAlign="center" layout="absolute" verticalAlign="middle">
+	<mx:Style source="player.css" />
+	<mx:Script>
+		<![CDATA[
+			import com.adobe.serialization.json.JSON;
+			
+			import mx.collections.ArrayCollection;
+			import mx.messaging.management.Attribute;
+			
+			import org.osmf.containers.MediaContainer;
+			import org.osmf.elements.VideoElement;
+			import org.osmf.events.*;
+			import org.osmf.events.TimelineMetadataEvent;
+			import org.osmf.media.DefaultMediaFactory;
+			import org.osmf.media.MediaElement;
+			import org.osmf.media.MediaPlayer;
+			import org.osmf.media.URLResource;
+			import org.osmf.metadata.CuePoint;
+			import org.osmf.metadata.CuePointType;
+			import org.osmf.metadata.TimelineMarker;
+			import org.osmf.metadata.TimelineMetadata;
+			import org.osmf.net.NetLoader;
+			import org.osmf.net.NetStreamCodes;
+			import org.osmf.traits.LoadState;
+			import org.osmf.traits.LoadTrait;
+			import org.osmf.traits.MediaTraitType;
+			import org.osmf.traits.TimeTrait;
+			import org.osmf.net.httpstreaming.HTTPStreamingNetLoader;
+						
+			private static const DEFAULT_PROGRESS_DELAY:uint = 1000;
+			private static const MAX_VIDEO_WIDTH:int = 640;
+			private static const MAX_VIDEO_HEIGHT:int = 360;
+			
+			private var ignoreDynamicCuePoints:Boolean;
+			private var dynamicTimelineMetadata:TimelineMetadata;
+			private var embeddedTimelineMetadata:TimelineMetadata;
+			
+			private var streamAddress:String;
+			
+			private var mediaElement:MediaElement;
+			
+			[Bindable]
+			private var mediaPlayer:MediaPlayer;
+				
+			private function init():void
+			{
+				mediaContainerUIComponent.container = new MediaContainer();
+				
+				mediaPlayer = new MediaPlayer();
+				
+				streamAddress = parameters.streamAddress;
+				
+				trace('streaming from: ' + streamAddress);
+				
+				if(streamAddress != null) {
+				
+					mediaPlayer.currentTimeUpdateInterval = DEFAULT_PROGRESS_DELAY;
+					mediaPlayer.bufferTime = 2;
+					mediaPlayer.autoPlay = true;
+					ignoreDynamicCuePoints = false;
+
+					var factory:DefaultMediaFactory = new DefaultMediaFactory();
+					var mediaElement:MediaElement = new NetStreamVideoElement(new URLResource(streamAddress));
+					
+					mediaElement.addEventListener(MediaErrorEvent.MEDIA_ERROR,function(event:MediaErrorEvent):void
+					{
+						trace("event.error.message: " + event.error.message);
+						return;
+					});
+
+					if (mediaPlayer.media != null)
+					{
+						mediaContainerUIComponent.container.removeMediaElement(mediaPlayer.media);
+					}
+					
+					if (mediaElement != null)
+					{
+						mediaContainerUIComponent.container.addMediaElement(mediaElement);
+					}
+					
+					mediaPlayer.media = mediaElement;
+				} else 
+					trace("Flash paramter stream_address needs to be set");
+			}
+											
+			private function onMediaSizeChange(event:DisplayObjectEvent):void 
+			{
+				var width:int = event.newWidth;
+				var height:int = event.newHeight;
+				
+				// Scale to native or smaller
+				if (width > MAX_VIDEO_WIDTH || height > MAX_VIDEO_HEIGHT)
+				{
+					if ((width/height) >= (MAX_VIDEO_WIDTH/MAX_VIDEO_HEIGHT))
+					{
+						mediaContainerUIComponent.width = MAX_VIDEO_WIDTH;
+						mediaContainerUIComponent.height = MAX_VIDEO_WIDTH * (height/width);
+					}
+					else
+					{
+						mediaContainerUIComponent.width = MAX_VIDEO_HEIGHT * (width/height);
+						mediaContainerUIComponent.height = MAX_VIDEO_HEIGHT;
+					}
+				}
+				else if (width > 0 && height > 0)
+				{
+					mediaContainerUIComponent.width = event.newWidth;
+					mediaContainerUIComponent.height = event.newHeight;			
+				}
+			}			
+		]]>
+	</mx:Script>
+	<samples:MediaContainerUIComponent id="mediaContainerUIComponent" left="0" top="0" width="640"
+									   height="360"/>
+</mx:Application>

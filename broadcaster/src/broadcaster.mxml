@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml"
+				xmlns:samples="org.osmf.samples.*"
+				width="0" height="0" applicationComplete="init()" backgroundColor="#ffffff"
+				horizontalAlign="center" layout="absolute" verticalAlign="middle">	
+	<mx:Script>
+		<![CDATA[
+
+			private var serverName:String;
+			private var movieName:String;
+			
+			private var nc:NetConnection;
+			
+			private function init():void {
+
+				serverName = parameters.serverName;
+				movieName = parameters.movieName;
+				
+				trace('serverName: ' + serverName);
+				trace('movieName: ' + movieName);
+				
+				NetConnection.defaultObjectEncoding = 
+					flash.net.ObjectEncoding.AMF0;
+				
+				nc = new NetConnection();
+				nc.connect(serverName);
+				
+				trace('connect has been called');
+				
+				ExternalInterface.addCallback("injectQuestion", injectQuestion);
+			}
+			
+			public function injectQuestion(question:Object):void {
+				trace('injecting question into: ' + movieName);
+				nc.call("injectEvent", null, movieName, question);
+			}
+			
+		]]>
+	</mx:Script>	
+</mx:Application>

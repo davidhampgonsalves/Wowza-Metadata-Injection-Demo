@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<fxpProperties abbreviated="false" authoringTool="Flex Builder" compiles="true" parentProject="e4a61d57-1e5a-4816-8eac-67a333fb3cab" projectUUID="e4a61d57-1e5a-4816-8eac-67a333fb3cab" pureCatalystProject="false" sdkVersion="4.5.1" uuid="22893d5c-70eb-45d1-9dad-897926a77624" version="15">
+  <projects>
+    <project filename="MediaContainerUIComponent.fxpl" position="2" projectUUID="de2631e3-5e44-4b58-92d1-ab03b4b8916c" uuid="22893d5c-70eb-45d1-9dad-897926a77624"/>
+  </projects>
+  <src/>
+  <swc>
+    <linked location="sdkPlaceHolder" path="sdkPlaceHolder" position="0" uuid="22893d5c-70eb-45d1-9dad-897926a77624"/>
+    <linked location="C:/Users/dhgonsalves/Downloads/OSMF_source_v1.5/OSMF.swc" path="/linked-swc/OSMF.swc" position="1" uuid="22893d5c-70eb-45d1-9dad-897926a77624"/>
+    <linked location="C:/Users/dhgonsalves/Downloads/as3corelib-.93/as3corelib-.93/lib/as3corelib.swc" path="/linked-swc/as3corelib.swc" position="3" uuid="22893d5c-70eb-45d1-9dad-897926a77624"/>
+  </swc>
+  <misc/>
+  <theme/>
+  <mxmlFormattingPrefs groupAttributesByState="true" maxLineWidth="100" mxmlAlignAttributes="true" mxmlAttributeOrder="id,userLabel,includeIn,excludeFrom,visible,x,y,z,left,right,top,bottom,width,height,minWidth,minHeight,maxWidth,maxHeight,label" mxmlKeepAttributeValuesOrganized="true"/>
+</fxpProperties>
